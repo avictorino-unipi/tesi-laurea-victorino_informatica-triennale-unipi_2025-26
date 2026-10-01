@@ -27,11 +27,11 @@ Sono stati implementati tre stimatori per popolazioni chiuse con probabilità di
 
 # Piano di Lavoro
 
-Il lavoro si è articolato in quattro fasi.
+Il lavoro si è articolato in quattro fasi:
 
-1. **Studio teorico.** Analisi della letteratura sulla capture-recapture e dei modelli per popolazioni chiuse, con particolare attenzione agli stimatori che ammettono eterogeneità fra individui, e definizione della corrispondenza con il dominio di rete: l'indirizzo MAC funge da marca dell'individuo e la finestra di osservazione da occasione di cattura.
-2. **Banco di prova.** Sviluppo di un generatore che simula reti con numerosità nota e produce il loro traffico sintetico, così da poter confrontare ogni stima con il valore reale.
-3. **Programma di analisi.** Sviluppo di un modulo in C che legge i file di cattura, ricostruisce quali nodi sono stati visti in ciascuna finestra e calcola i tre stimatori con i relativi intervalli di fiducia.
+1. **Studio teorico.** Analisi della letteratura sulla capture-recapture e dei modelli per popolazioni chiuse, con particolare attenzione agli stimatori che ammettono eterogeneità fra individui, e definizione della corrispondenza con il dominio di rete: l'indirizzo MAC funge da marca dell'individuo e la finestra di osservazione da occasione di cattura;
+2. **Banco di prova.** Sviluppo di un generatore che simula reti con numerosità nota e produce il loro traffico sintetico, così da poter confrontare ogni stima con il valore reale;
+3. **Programma di analisi.** Sviluppo di un modulo in C che legge i file di cattura, ricostruisce quali nodi sono stati visti in ciascuna finestra e calcola i tre stimatori con i relativi intervalli di fiducia;
 4. **Sperimentazione.** Simulazione di 36 configurazioni (1000, 500 e 100 host; 3, 10, 15 e 30 server; tre profili di traffico), seguite giorno per giorno lungo 10 giornate di osservazione, e confronto dei risultati.
 
 Fra gli sviluppi futuri c'è la validazione su traffico reale, su un segmento di rete di cui sia noto l'inventario, per misurare l'effetto delle condizioni che nella simulazione sono soddisfatte per costruzione.
