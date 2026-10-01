@@ -34,7 +34,7 @@ Il lavoro si è articolato in quattro fasi:
 3. **Programma di analisi.** Sviluppo di un modulo in C che legge i file di cattura, ricostruisce quali nodi sono stati visti in ciascuna finestra e calcola i tre stimatori con i relativi intervalli di fiducia;
 4. **Sperimentazione.** Simulazione di 36 configurazioni (1000, 500 e 100 host; 3, 10, 15 e 30 server; tre profili di traffico), seguite giorno per giorno lungo 10 giornate di osservazione, e confronto dei risultati.
 
-Fra gli sviluppi futuri c'è la validazione su traffico reale, su un segmento di rete di cui sia noto l'inventario, per misurare l'effetto delle condizioni che nella simulazione sono soddisfatte per costruzione.
+Tra gli sviluppi futuri si prevede una validazione su traffico reale, condotta su un segmento di rete il cui inventario sia noto, al fine di valutare l'effetto delle condizioni che nell'ambiente simulato risultano soddisfatte per costruzione.
 
 # Architettura del sistema
 
