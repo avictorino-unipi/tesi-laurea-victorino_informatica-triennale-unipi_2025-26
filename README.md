@@ -34,8 +34,6 @@ Il lavoro si è articolato in quattro fasi.
 3. **Programma di analisi.** Sviluppo di un modulo in C che legge i file di cattura, ricostruisce quali nodi sono stati visti in ciascuna finestra e calcola i tre stimatori con i relativi intervalli di fiducia.
 4. **Sperimentazione.** Simulazione di 36 configurazioni (1000, 500 e 100 host; 3, 10, 15 e 30 server; tre profili di traffico), seguite giorno per giorno lungo 10 giornate di osservazione, e confronto dei risultati.
 
-**Risultati principali.** Al termine delle 10 giornate i tre stimatori si discostano in media dalla numerosità reale del 6,9% (Jackknife), del 7,9% (Chao) e del 12,3% (Huggins). Jackknife e Chao risultano complementari nel tempo: Chao è il più accurato nelle prime giornate, Jackknife dalla terza in poi. Usati insieme delimitano un intervallo che contiene la numerosità reale in 35 configurazioni su 36 a fine rilevazione. Il fattore che incide di più sulle stime è la frequenza con cui i nodi si fanno vedere: quando la probabilità media di osservazione scende sotto 0,10, Chao e Huggins sbagliano in media di oltre il 10%.
-
 Fra gli sviluppi futuri c'è la validazione su traffico reale, su un segmento di rete di cui sia noto l'inventario, per misurare l'effetto delle condizioni che nella simulazione sono soddisfatte per costruzione.
 
 # Architettura del sistema
@@ -201,9 +199,7 @@ Grafici riassuntivi sulle 36 configurazioni, riportati nei capitoli 4 e 5 della 
 
 ## fig3d/ e grafici3d_singoli/
 
-Spettri delle frequenze di cattura: superfici che mostrano, per ogni giornata, quanti nodi sono stati osservati esattamente k volte (k da 1 a 5, più la classe aggregata oltre 5).
+Spettri delle frequenze di cattura: superfici che mostrano, per ogni giornata, quanti nodi sono stati osservati esattamente k volte (k da 1 a 5, più la classe aggregata oltre 5). Le superfici sono state generate con la libreria Python matplotlib.
 
 - `fig3d/DataSet<n>_pop<N>_superficie.png`: un'immagine per popolazione, con i tre profili affiancati sulla stessa scala. `n` è il foglio di `Benchmark_grafici.xlsx` (numero di server) e `N` la numerosità reale.
 - `grafici3d_singoli/DataSet<n>_<host>nodi-<server>server/`: le stesse superfici, un file per profilo, a risoluzione maggiore.
-
-L'asse verticale è un numero di nodi, quindi le figure di taglie diverse vanno confrontate nella forma, non nell'altezza. La classe oltre 5 raccoglie venticinque classi e non è confrontabile con le singole, e la superficie interpola fra valori discreti.
