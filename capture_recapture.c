@@ -490,9 +490,7 @@ int node_compute_subnet(const Node_t *n) {
     return -1;
 }
 
-/* (Ri)assegna il nodo alla sua sottorete aggiornando node_count. Serve quando
- * un nodo visto prima solo in IPv6 rivela un IPv4: passa di sottorete senza
- * essere contato due volte. */
+/* Ri-assegna il nodo alla sua sottorete aggiornando node_count. Serve quando un nodo visto prima solo in IPv6 rivela un IPv4: passa di sottorete senza essere contato due volte. */
 void node_update_subnet(Node_t *n) {
     int new_idx = node_compute_subnet(n);
 
@@ -884,8 +882,7 @@ void packetProcessHandler(u_char *dev_idx, const struct pcap_pkthdr *h, const u_
         save_node(capture_idx, smac, version_ip, &src_ip);
         save_node(capture_idx, dmac, version_ip, &dst_ip);
 
-        /* Flusso attribuito alla sottorete della sorgente; ICMP usa (tipo, codice)
-         * al posto delle porte. */
+        /* Flusso attribuito alla sottorete della sorgente; ICMP usa (tipo, codice) al posto delle porte. */
         if (protocol == IPPROTO_TCP || protocol == IPPROTO_UDP || protocol == ARP_PSEUDO_PROTOCOL) {
             process_flow(h, version_ip, &src_ip, &dst_ip, src_port, dst_port, protocol);
         } else if (protocol == IPPROTO_ICMP || protocol == IPPROTO_ICMPV6) {

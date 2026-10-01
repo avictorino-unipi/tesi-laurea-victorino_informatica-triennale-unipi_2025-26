@@ -335,8 +335,7 @@ void node_jackknife_estimators_print_stats(const EstimatorData_t *d) {
                 below_s[k] ? "   [N_Jk < S_obs: stima non utilizzabile]" : "");
     }
 
-    /* Test sequenziale: si verifica se passare all'ordine successivo cambia la
-     * stima in modo significativo. Il test e' condizionato ai nodi osservati. */
+    /* Test sequenziale: si verifica se passare all'ordine successivo cambia la stima in modo significativo. Il test e' condizionato ai nodi osservati. */
     double Pk[6] = { 0.0 };
     double Tk[6] = { 0.0 };
     int have_test[6] = { 0 };
@@ -373,9 +372,7 @@ void node_jackknife_estimators_print_stats(const EstimatorData_t *d) {
 
     int fallback = 0;
     if (ksel == 0) {
-        /* Tutte le ipotesi rifiutate o nessun test disponibile, e la scelta andrebbe fatta fra i primi tre ordini.
-        *  Per convenzione si usa il primo, a varianza minima. 
-        */
+        /* Tutte le ipotesi rifiutate o nessun test disponibile, e la scelta andrebbe fatta fra i primi tre ordini. Per convenzione si usa il primo, a varianza minima. */
         int alcun_test = 0;
         for (int k = 1; k <= kmax - 1; k++) {
             if (have_test[k]) {
@@ -612,8 +609,7 @@ void node_subnet_capture_probability_print_stats(const EstimatorData_t *d) {
     }
 
     fprintf(stdout, "=============== PROBABILITA' DI CATTURA MEDIA PER SOTTORETE ===============\n");
-    fprintf(stdout, "%-24s | %-5s | %-42s | %-10s | %-10s | %-15s\n",
-            "Sottorete", "IPv", "Range", "Nodi", "Flussi", "P(capture) media");
+    fprintf(stdout, "%-24s | %-5s | %-42s | %-10s | %-10s | %-15s\n", "Sottorete", "IPv", "Range", "Nodi", "Flussi", "P(capture) media");
     fprintf(stdout, "--------------------------------------------------------------------------------------------------------------------------\n");
     for (int s = 0; s < d->n_subnets; s++) {
         if (subnet_node_count[s] == 0) continue;
@@ -773,8 +769,7 @@ static int hug_invert(const double *A_in, int n, double *Ainv) {
     return 1;
 }
 
-/* Vettore di disegno di un nodo in un'occasione. Con use_z=0 si ignora la
- * cattura pregressa (probabilita' di prima cattura). Nullo per le occasioni congelate. */
+/* Vettore di disegno di un nodo in un'occasione. Con use_z=0 si ignora la cattura pregressa (probabilita' di prima cattura). Nullo per le occasioni congelate. */
 static void hug_design(int i, int j, int use_z, double *w) {
     for (int r = 0; r < hug_p; r++) {
         w[r] = 0.0;
@@ -914,8 +909,7 @@ static int hug_gradient(const double *beta, double *g) {
     return 1;
 }
 
-/* Hessiana della log-verosimiglianza condizionale, definita negativa all'ottimo.
- * 0 se manca memoria. */
+/* Hessiana della log-verosimiglianza condizionale, definita negativa all'ottimo. Ritorna 0 se manca memoria. */
 static int hug_hessian(const double *beta, double *H) {
     int p_ = hug_p;
     for (int r = 0; r < p_ * p_; r++) {
@@ -1002,8 +996,7 @@ static int hug_hessian(const double *beta, double *H) {
     return 1;
 }
 
-/* Newton-Raphson. Ritorna 1 se i parametri sono finiti; *converged dice se
- * la convergenza e' stata raggiunta. */
+/* Newton-Raphson. Ritorna 1 se i parametri sono finiti; *converged dice se la convergenza e' stata raggiunta. */
 static int hug_fit(double *beta, double *cov_beta, double *ll_out, int *converged) {
     int p_ = hug_p;
     double *g  = (double *)malloc((size_t)p_ * sizeof(double));
@@ -1112,8 +1105,7 @@ static int hug_fit(double *beta, double *cov_beta, double *ll_out, int *converge
         *ll_out = hug_loglik(beta);
     }
 
-    /* Covarianza delle stime: inversa dell'informazione osservata, cioe'
-     * dell'Hessiana cambiata di segno. */
+    /* Covarianza delle stime: inversa dell'informazione osservata, cioe' dell'Hessiana cambiata di segno. */
     if (cov_beta != NULL) {
         int hess_ok = hug_hessian(beta, H);
         for (int r = 0; hess_ok && r < p_ * p_; r++) {
@@ -1276,7 +1268,8 @@ static int hug_buffers_alloc(HugBuffers_t *b, int n, int t, int ncat) {
 
 /* ---- Fase 1: censimento delle occasioni ----
  * Riempie occ_empty e stampa le note. Ritorna le occasioni attive, -1 se
- * manca memoria. */
+ * manca memoria.
+ */
 static int hug_analizza_occasioni(const EstimatorData_t *d, unsigned char *occ_empty) {
     int n = d->n_nodes;
     int t = d->t;
@@ -1877,8 +1870,7 @@ void node_huggins_estimators_print_stats(const EstimatorData_t *d) {
     }
     free(dN);
 
-    /* In un massimo la covarianza e' definita positiva: un valore negativo indica
-     * un fit fermo in un punto di sella o al bordo (segnalato). */
+    /* In un massimo la covarianza e' definita positiva: un valore negativo indica un fit fermo in un punto di sella o al bordo (segnalato). */
     int var_beta_neg = 0;
     if (var_beta < 0.0) {
         var_beta_neg = 1;
@@ -1892,7 +1884,7 @@ void node_huggins_estimators_print_stats(const EstimatorData_t *d) {
     double ci_lo_cl = Nhat - (1.96 * se);
     double ci_hi_cl = Nhat + (1.96 * se);
     if (ci_lo_cl < S) {
-        ci_lo_cl = S;                  /* N non puo' essere minore degli osservati */
+        ci_lo_cl = S;   /* N non puo' essere minore degli osservati */
     }
 
     /* Intervalli: normale asintotico, pratico (dagli osservati a N piu' due errori standard) e bootstrap condizionale. */
