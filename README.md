@@ -19,15 +19,24 @@ I file `pcap` non sono inclusi nella repository: si rigenerano in modo identico 
 
 # Introduzione
 
-Il progetto riguarda l’uso di tecniche di capture-recapture per stimare il numero di nodi non individuati durante una scansione passiva della rete. L’obiettivo è sfruttare osservazioni multiple e complementari per inferire la presenza di nodi nascosti, non direttamente visibili, e ottenere una stima più robusta della dimensione reale dell’infrastruttura. Questo approccio può essere utile in contesti in cui la visibilità della rete è parziale o incompleta, e in cui è necessario valutare con maggiore accuratezza la copertura delle attività di discovery.
+Le tecniche di discovery di rete si dividono in attive e passive. Quelle attive interrogano direttamente i dispositivi e ottengono informazioni dettagliate, ma aumentano il traffico e possono disturbare sistemi critici, come gli ICS, o far scattare gli IDS. Quelle passive si limitano ad ascoltare il traffico e non sono intrusive, ma non vedono mai l'intera rete: i dispositivi poco attivi sfuggono all'osservazione, e il numero di nodi osservati resta sempre inferiore a quello reale, di una quantità che non si conosce.
+
+Il progetto applica a questo problema le tecniche di capture-recapture, nate in ecologia per stimare popolazioni animali difficili da contare e poi usate anche in epidemiologia e nell'ingegneria del software. L'idea è osservare la rete in più finestre successive e ricavare, dal modo in cui gli stessi nodi vengono rivisti, una stima di quanti nodi non sono mai stati osservati.
+
+Sono stati implementati tre stimatori per popolazioni chiuse con probabilità di cattura eterogenee: Jackknife (Burnham & Overton, 1978, 1979), Chao (Chao, 1984, 1987) e Huggins (Huggins, 1989, 1991). Il lavoro si inserisce nella ricerca su strumenti a supporto della discovery passiva, come la piattaforma NotLine (Baiardi, Sammartino, Ruggieri, 2025).
 
 # Piano di Lavoro
 
-L’attività di ricerca si aprirà con una fase iniziale dedicata all’approfondimento teorico della piattaforma NotLine e allo studio dei modelli statistici di capture-recapture, con l’obiettivo di comprendere come adattare i classici algoritmi di stima della popolazione al contesto del monitoraggio di rete. Una volta consolidata la base teorica, il lavoro proseguirà con la progettazione di una strategia di acquisizione dati basata su osservazioni passive multiple, definendo i criteri temporali e spaziali necessari per ottenere campionamenti che siano tra loro complementari e statisticamente significativi.
+Il lavoro si è articolato in quattro fasi.
 
-Successivamente, il cuore del progetto si sposterà sullo sviluppo e sull’integrazione di un modulo software capace di elaborare i dati raccolti, applicando i modelli di inferenza per calcolare la probabilità di presenza di nodi nascosti all'interno dell’infrastruttura cyber-fisica. Questa fase richiederà un’attenzione particolare nella gestione dei falsi positivi e nella corretta categorizzazione delle identità rilevate per garantire la precisione delle stime.
+1. **Studio teorico.** Analisi della letteratura sulla capture-recapture e dei modelli per popolazioni chiuse, con particolare attenzione agli stimatori che ammettono eterogeneità fra individui, e definizione della corrispondenza con il dominio di rete: l'indirizzo MAC funge da marca dell'individuo e la finestra di osservazione da occasione di cattura.
+2. **Banco di prova.** Sviluppo di un generatore che simula reti con numerosità nota e produce il loro traffico sintetico, così da poter confrontare ogni stima con il valore reale.
+3. **Programma di analisi.** Sviluppo di un modulo in C che legge i file di cattura, ricostruisce quali nodi sono stati visti in ciascuna finestra e calcola i tre stimatori con i relativi intervalli di fiducia.
+4. **Sperimentazione.** Simulazione di 36 configurazioni (1000, 500 e 100 host; 3, 10, 15 e 30 server; tre profili di traffico), seguite giorno per giorno lungo 10 giornate di osservazione, e confronto dei risultati.
 
-La parte finale del percorso sarà dedicata alla validazione sperimentale del metodo attraverso il gemello digitale messo a disposizione da NotLine. In questo ambiente controllato, sarà possibile simulare diverse configurazioni di rete con un numero noto di nodi "invisibili" per misurare l’accuratezza dell’algoritmo e la sua capacità di risposta in scenari di visibilità degradata. Il lavoro si concluderà con la redazione della tesi, in cui verranno discussi i risultati ottenuti e valutato l'impatto di tale approccio sulla resilienza e sulla sicurezza complessiva del sistema monitorato.
+**Risultati principali.** Al termine delle 10 giornate i tre stimatori si discostano in media dalla numerosità reale del 6,9% (Jackknife), del 7,9% (Chao) e del 12,3% (Huggins). Jackknife e Chao risultano complementari nel tempo: Chao è il più accurato nelle prime giornate, Jackknife dalla terza in poi. Usati insieme delimitano un intervallo che contiene la numerosità reale in 35 configurazioni su 36 a fine rilevazione. Il fattore che incide di più sulle stime è la frequenza con cui i nodi si fanno vedere: quando la probabilità media di osservazione scende sotto 0,10, Chao e Huggins sbagliano in media di oltre il 10%.
+
+Fra gli sviluppi futuri c'è la validazione su traffico reale, su un segmento di rete di cui sia noto l'inventario, per misurare l'effetto delle condizioni che nella simulazione sono soddisfatte per costruzione.
 
 # Architettura del sistema
 
