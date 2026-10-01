@@ -10,7 +10,7 @@ Repository contenente i codici, i dati e i grafici della tesi di laurea triennal
 ├── estimators.c, estimators.h       stimatori Jackknife, Chao e Huggins
 ├── makefile                         compilazione e target dei 36 test
 ├── Benchmark_grafici.xlsx           risultati numerici di tutte le configurazioni
-├── fig/                             grafici riassuntivi usati nella tesi
+├── fig/                             grafici riassuntivi e schema dell'architettura
 ├── fig3d/                           spettri delle frequenze, un'immagine per popolazione
 └── grafici3d_singoli/               spettri delle frequenze, un'immagine per configurazione
 ```
@@ -33,15 +33,7 @@ La parte finale del percorso sarà dedicata alla validazione sperimentale del me
 
 Il sistema è composto da due parti indipendenti, che comunicano soltanto attraverso i file `pcap`.
 
-```mermaid
-flowchart LR
-    G["network_benchmark_generator.py<br/>(Python + scapy)"] -->|"30 file pcap<br/>10 giorni x 3 fasce"| C["capture_recapture.c<br/>(C + libpcap)"]
-    C -->|"matrice di cattura<br/>nodi x occasioni"| E["estimators.c"]
-    E --> J["Jackknife"]
-    E --> CH["Chao"]
-    E --> H["Huggins"]
-    E --> D["Diagnostica<br/>per sottorete"]
-```
+![Architettura del sistema](fig/architettura_sistema.jpg)
 
 | File | Ruolo |
 |------|-------|
@@ -207,6 +199,7 @@ Grafici riassuntivi sulle 36 configurazioni, riportati nei capitoli 4 e 5 della 
 
 | File | Contenuto |
 |------|-----------|
+| `architettura_sistema.jpg` | Schema dell'architettura: generatore, file pcap, programma di analisi e stimatori. |
 | `fig1_errore_relativo.png` | Errore relativo medio dei tre stimatori per giornata, separato per profilo di traffico. Per Huggins sono escluse le stime superiori a 3N. |
 | `fig2_errore_assoluto.png` | Errore relativo assoluto medio dei tre stimatori per giornata; mostra l'inversione fra Chao e Jackknife alla terza giornata. |
 | `fig3_traiettorie_3srv.png` | Traiettorie delle stime nelle configurazioni con 3 server: righe per taglia, colonne per profilo, con N, gli osservati e le bande di confidenza. |
