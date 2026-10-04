@@ -9,6 +9,11 @@ Repository contenente i codici, i dati e i grafici della tesi di laurea triennal
 ├── capture_recapture.c              lettura dei pcap e matrice di cattura
 ├── estimators.c, estimators.h       stimatori Jackknife, Chao e Huggins
 ├── makefile                         compilazione e target dei 36 test
+├── bench_run.sh                     esecuzione cumulativa per giornata e log dei 36 test
+├── bench_to_excel.py                scrittura dei risultati dei log nel workbook
+├── rigenera_grafici.py              ricostruzione dei grafici del workbook
+├── genera_figure.py                 figure riassuntive della cartella fig/
+├── grafici3d.py                     spettri delle frequenze della cartella fig3d/
 ├── Benchmark_grafici.xlsx           risultati numerici di tutte le configurazioni
 ├── fig/                             grafici riassuntivi e schema dell'architettura
 ├── fig3d/                           spettri delle frequenze, un'immagine per popolazione
@@ -162,6 +167,14 @@ python3 bench_to_excel.py --logs logs --xlsx Benchmark_grafici.xlsx \
 
 Vengono scritte solo le celle numeriche, modificando direttamente l'XML del file, così grafici, stili e formattazione condizionale restano intatti. Prima della scrittura viene creata una copia di sicurezza `Benchmark_grafici.xlsx.<data-ora>.bak`.
 
+Dopo l'aggiornamento dei valori, `rigenera_grafici.py` ricostruisce i grafici del workbook, sullo stesso file:
+
+```bash
+python3 rigenera_grafici.py Benchmark_grafici.xlsx
+```
+
+Lo script parte dai grafici del `Data Set 1` e li replica per ogni altro foglio `Data Set` che abbia le stime compilate, con titoli, ordine delle serie e colori uniformi. Può essere rilanciato più volte: a ogni esecuzione scarta i grafici generati in precedenza e li ricostruisce. Il file viene sovrascritto; con `--out FILE` si scrive su un file diverso.
+
 ## Uso su catture reali
 
 Il programma accetta qualunque sequenza di file `pcap` con intestazione Ethernet, uno per occasione:
@@ -204,6 +217,18 @@ Le celle delle stime sono colorate in base all'errore relativo rispetto a `popol
 
 Grafici riassuntivi sulle 36 configurazioni, riportati nei capitoli 4 e 5 della tesi.
 
+Le figure si rigenerano dal workbook con:
+
+```bash
+python3 genera_figure.py Benchmark_grafici.xlsx
+```
+
+Lo script legge `Benchmark_grafici.xlsx` in sola lettura e scrive le figure in `fig/`, in formato PNG a 200 dpi. Si interrompe con un errore se una delle 36 configurazioni non ha tutte e dieci le giornate. Cartella e risoluzione si possono indicare in modo esplicito:
+
+```bash
+python3 genera_figure.py Benchmark_grafici.xlsx --out fig --formato png --dpi 200
+```
+
 | File | Contenuto |
 |------|-----------|
 | `architettura_sistema.jpg` | Schema dell'architettura: generatore, file pcap, programma di analisi e stimatori. |
@@ -218,6 +243,14 @@ Grafici riassuntivi sulle 36 configurazioni, riportati nei capitoli 4 e 5 della 
 ## fig3d/ e grafici3d_singoli/
 
 Spettri delle frequenze di cattura: superfici che mostrano, per ogni giornata, quanti nodi sono stati osservati esattamente k volte (k da 1 a 5, più la classe aggregata oltre 5). Le superfici sono state generate con la libreria Python matplotlib.
+
+Le immagini di `fig3d/` si rigenerano dal workbook con:
+
+```bash
+python3 grafici3d.py --tipo superficie
+```
+
+Lo script legge `Benchmark_grafici.xlsx` in sola lettura, elabora i fogli `Data Set 1` ... `Data Set 4` e scrive un PNG per ogni coppia (foglio, popolazione) nella cartella `fig3d/`.
 
 - `fig3d/DataSet<n>_pop<N>_superficie.png`: un'immagine per popolazione, con i tre profili affiancati sulla stessa scala. `n` è il foglio di `Benchmark_grafici.xlsx` (numero di server) e `N` la numerosità reale.
 - `grafici3d_singoli/DataSet<n>_<host>nodi-<server>server/`: le stesse superfici, un file per profilo, a risoluzione maggiore.
