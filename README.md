@@ -16,8 +16,6 @@ Repository contenente i codici, i dati e i grafici della tesi di laurea triennal
 └── bftest*/                         pacchetti generati per ciascuna delle 36 configurazioni possibili
 ```
 
-I file `pcap` non sono inclusi nella repository: si rigenerano in modo identico con il generatore e i semi indicati più avanti.
-
 # Introduzione
 
 Le tecniche di discovery di rete si dividono in attive e passive. Quelle attive interrogano direttamente i dispositivi e ottengono informazioni dettagliate, ma aumentano il traffico e possono disturbare sistemi critici, come gli ICS, o far scattare gli IDS. Quelle passive si limitano ad ascoltare il traffico e non sono intrusive, ma non vedono mai l'intera rete: i dispositivi poco attivi sfuggono all'osservazione, e il numero di nodi osservati resta sempre inferiore a quello reale, di una quantità che non si conosce.
@@ -144,6 +142,25 @@ for n in $(seq 1 36); do
     make -s bftest$n > risultati/bftest$n.txt
 done
 ```
+
+## Rilevazione giornaliera e aggiornamento del workbook
+
+I dati di `Benchmark_grafici.xlsx` provengono da un'analisi cumulativa per giornata: per ogni test la giornata d usa le prime 3·d occasioni. Lo script `bench_run.sh` esegue `capture_recapture.out` su tutte le combinazioni (test, giornata) e salva un log per ciascuna in `logs/bftestN_giorno<K>.log`:
+
+```bash
+FORCE=1 JOBS=8 ./bench_run.sh $(seq 1 36)
+```
+
+`FORCE=1` rifà anche i log già presenti (altrimenti vengono saltati), `JOBS=8` fissa il numero di esecuzioni in parallelo (di default una per core). Lo script chiede la password di `sudo` una sola volta all'inizio.
+
+Lo script `bench_to_excel.py` legge i log e scrive i valori nei fogli del workbook; `--map` indica quali test vanno in quale foglio, nell'ordine dei blocchi:
+
+```bash
+python3 bench_to_excel.py --logs logs --xlsx Benchmark_grafici.xlsx \
+    --map "Data Set 1=1-9" "Data Set 2=10-18" "Data Set 3=19-27" "Data Set 4=28-36"
+```
+
+Vengono scritte solo le celle numeriche, modificando direttamente l'XML del file, così grafici, stili e formattazione condizionale restano intatti. Prima della scrittura viene creata una copia di sicurezza `Benchmark_grafici.xlsx.<data-ora>.bak`.
 
 ## Uso su catture reali
 
