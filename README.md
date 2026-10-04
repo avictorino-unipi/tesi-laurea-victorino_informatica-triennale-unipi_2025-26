@@ -12,7 +12,8 @@ Repository contenente i codici, i dati e i grafici della tesi di laurea triennal
 ├── Benchmark_grafici.xlsx           risultati numerici di tutte le configurazioni
 ├── fig/                             grafici riassuntivi e schema dell'architettura
 ├── fig3d/                           spettri delle frequenze, un'immagine per popolazione
-└── grafici3d_singoli/               spettri delle frequenze, un'immagine per configurazione
+├── grafici3d_singoli/               spettri delle frequenze, un'immagine per configurazione
+└── bftest*/                         pacchetti generati per ciascuna delle 36 configurazioni possibili
 ```
 
 I file `pcap` non sono inclusi nella repository: si rigenerano in modo identico con il generatore e i semi indicati più avanti.
